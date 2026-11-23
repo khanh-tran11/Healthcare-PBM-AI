@@ -47,14 +47,19 @@ def _parse(text: str) -> _Raw:
     return raw
 
 
-def _not_enough(chunks: list[Chunk], understood: str, mode: str, tokens: int = 0) -> Verdict:
+_DANGER_KEYWORDS = ("đột quỵ", "tai biến", "ung thư", "sốt xuất huyết", "khó thở", "co giật")
+
+
+def _not_enough(chunks: list[Chunk], understood: str, mode: str, tokens: int = 0, claim: str = "") -> Verdict:
+    text = (claim + " " + understood).lower()
+    dangerous = any(k in text for k in _DANGER_KEYWORDS)
     return Verdict(
         label="chua_du_bang_chung",
         confidence=0.3,
         understood=understood,
         explanation_vi="Nguồn tin cậy hiện có chưa đủ để kết luận về tin này. Bạn nên hỏi bác sĩ trước khi làm theo.",
         retrieved=chunks,
-        see_doctor=False,
+        see_doctor=dangerous,
         tokens=tokens,
         mode=mode,
     )
@@ -73,10 +78,10 @@ def _llm_judge(claim: str, chunks: list[Chunk], understood: str) -> Verdict:
         except (ValueError, ValidationError, json.JSONDecodeError):
             continue
     else:
-        return _not_enough(chunks, understood, "watsonx", total)
+        return _not_enough(chunks, understood, "watsonx", total, claim)
     cited = [chunks[i] for i in raw.cited if 0 <= i < len(chunks)]
     if not cited and raw.label != "chua_du_bang_chung":
-        return _not_enough(chunks, understood, "watsonx", total)  # guardrail: no citation, no verdict
+        return _not_enough(chunks, understood, "watsonx", total, claim)  # guardrail: no citation, no verdict
     return Verdict(
         label=raw.label,
         confidence=raw.confidence,
@@ -109,7 +114,7 @@ def _rule_judge(claim: str, chunks: list[Chunk], understood: str) -> Verdict:
             if overlap > best_overlap:
                 best, best_overlap, best_chunk = sent, overlap, c
     if best_chunk is None or best_overlap < 2:
-        return _not_enough(chunks, understood, "offline")
+        return _not_enough(chunks, understood, "offline", claim=claim)
     s = best.lower()
     if any(k in s for k in _UNPROVEN):
         label, conf = "chua_du_bang_chung", 0.5
@@ -132,7 +137,7 @@ def _rule_judge(claim: str, chunks: list[Chunk], understood: str) -> Verdict:
 
 def judge(claim: str, chunks: list[Chunk], understood: str = "") -> Verdict:
     if not chunks:
-        return _not_enough(chunks, understood, "offline" if config.OFFLINE else "watsonx")
+        return _not_enough(chunks, understood, "offline" if config.OFFLINE else "watsonx", claim=claim)
     if config.OFFLINE:
         return _rule_judge(claim, chunks, understood)
     return _llm_judge(claim, chunks, understood)
