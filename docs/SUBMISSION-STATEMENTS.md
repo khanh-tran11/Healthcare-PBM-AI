@@ -1,8 +1,6 @@
-# Bài nộp: 2 bài viết (mỗi bài ≤ 500 từ)
+# Submission statements
 
-Thay các ô [C] (số claim, ví dụ 12), [X], [R], [Y], [Z], [N], [P] bằng số thật từ `eval/ablation.md` và gauge Bobcoin. Bài viết bằng tiếng Anh vì đây là US cohort. Mỗi bài dưới 500 từ.
-
----
+Placeholders in [brackets] are filled with final numbers at submission time.
 
 ## 1. Problem and Solution Statement
 
@@ -30,16 +28,13 @@ If the evidence is weak, the agent searches again once. If the evidence is still
 
 ## 2. Technology Statement (IBM Bob)
 
-> ⚠️ **Khanh/Link sửa trước khi nộp:** từ 7:43 PM code do Claude Code viết, không phải Bob. Câu "IBM Bob wrote the code" và các gạch đầu dòng về Bob bên dưới chỉ được giữ nếu đúng. Viết lại theo những gì nhóm thật sự đã dùng Bob (ví dụ: /review repo, hỏi Bob giải thích lỗi, viết README) và xuất báo cáo session Bob đó.
 
-**IBM Bob as our development partner.** IBM Bob wrote the code for this project. Our team of two directed, reviewed and approved every step. We worked in small, file-scoped prompts, one per component, and committed after each, so the Git history mirrors Bob's work.
+**Two AI partners, one human-led workflow.** Under a 60-minute build, we split the work between two AI coding assistants and kept every decision with our team of two. Claude Code planned the project and wrote the first working version: ingestion, hybrid retrieval with Reciprocal Rank Fusion, the folk-term normalizer, the cited JSON judge, the LangGraph agent with its retry loop, the evaluation harness and the Streamlit interface. IBM Bob then became our reviewer and improver, working on that code directly in our repository.
 
-How we used Bob across the software lifecycle:
-- **Planning (Plan mode):** Bob turned our scope into a project structure: config, Pydantic schema, watsonx client and a stub pipeline. Our teammate could then build the UI in parallel.
-- **Building (Agent mode):** Bob implemented document ingestion and chunking, dense and BM25 hybrid retrieval with Reciprocal Rank Fusion, the folk-term normalizer, the LLM judge with structured JSON output, the LangGraph agent with its retry loop, the evaluation harness and the Streamlit interface.
-- **Understanding (Ask mode):** when a prompt failed, we asked Bob to explain the error before asking it to fix anything. This saved Bobcoins and prevented unrelated edits.
-- **Improving (/review and checkpoints):** Bob reviewed the full repository before submission. We used checkpoints to roll back experiments that broke the baseline.
-- **Documenting:** Bob wrote the tests, which use mocked watsonx calls, and the README.
+How we used IBM Bob:
+- **Reviewing (/review, Ask mode):** Bob reviewed the judge and the agent graph and listed the most severe bugs and risks for a health tool, without editing files.
+- **Improving (Code mode):** Bob improved the offline judge so it detects "misleading" claims, the label our evaluation showed was weakest. We measured accuracy before and after on the same labelled claims: [B0]% to [B1]%.
+- **Shipping:** Bob committed its change on its own branch and pushed it; we reviewed the diff in a pull request before merging, so the Git history shows which assistant wrote what.
 
 **Guardrails for a health project.**
 - An `agents.md` file kept Bob's rules short and enforceable:
@@ -49,12 +44,9 @@ How we used Bob across the software lifecycle:
   - fixed verdict labels
   - secrets only from `.env`
 - `.bobignore` kept API keys, source documents and the vector index out of Bob's context.
-- We read every shell command before approving it.
-- When Bob repeated a mistake, we added a one-line rule instead of rewriting long prompts. We logged each case in `docs/bob-log.md`.
+- We read every shell command and diff before approving it.
 
-[Thêm 1 đến 2 bài học thật từ bob-log, ví dụ: "Bob initially accepted verdicts with no citation; one rule in agents.md fixed it for every later prompt."]
-
-**Efficiency.** We used [N] Bobcoins across two accounts and roughly [P] prompts in a 60-minute build. Exported Bob session reports are included in the repository under `docs/bob-sessions/`.
+**Efficiency.** We used [N] Bobcoins across two accounts and [P] prompts in a 60-minute build. Exported Bob session reports are included in the repository under `docs/bob-sessions/`.
 
 **IBM watsonx.ai.**
 - **LLM:** [model ID] normalizes claims and produces cited verdicts as validated JSON.
