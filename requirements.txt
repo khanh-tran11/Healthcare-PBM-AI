@@ -1,0 +1,8 @@
+ibm-watsonx-ai>=1.1
+langgraph>=0.2
+pydantic>=2
+python-dotenv
+rank_bm25
+pyvi
+numpy
+streamlit

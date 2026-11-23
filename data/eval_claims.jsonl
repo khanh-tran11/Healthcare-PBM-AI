@@ -1,0 +1,20 @@
+{"id": 1, "claim": "Khi có người bị tai biến, chích máu 10 đầu ngón tay là cứu được", "label": "sai", "gold_source": "dot-quy"}
+{"id": 2, "claim": "Bị đột quỵ phải đưa ngay đến bệnh viện trong giờ vàng", "label": "dung", "gold_source": "dot-quy"}
+{"id": 3, "claim": "Bị trúng gió thì cạo gió là khỏi, không cần đi viện", "label": "gay_hieu_lam", "gold_source": "dot-quy"}
+{"id": 4, "claim": "Cảm cúm cứ uống trụ sinh cho nhanh khỏi", "label": "sai", "gold_source": "khang-sinh"}
+{"id": 5, "claim": "Uống kháng sinh thấy đỡ là tự ngưng thuốc được", "label": "sai", "gold_source": "khang-sinh"}
+{"id": 6, "claim": "Nhịn ăn và tắm nắng 7 ngày chữa khỏi ung thư", "label": "sai", "gold_source": "ung-thu"}
+{"id": 7, "claim": "U bướu mà động dao kéo thì sẽ di căn nhanh hơn", "label": "sai", "gold_source": "ung-thu"}
+{"id": 8, "claim": "Uống nước chanh để kiềm hóa cơ thể sẽ chữa được ung thư", "label": "sai", "gold_source": "ung-thu"}
+{"id": 9, "claim": "Người tiểu đường chỉ cần bỏ cơm, ăn khoai lang là khỏi bệnh", "label": "gay_hieu_lam", "gold_source": "tieu-duong"}
+{"id": 10, "claim": "Người tiểu đường nên tập thể dục đều đặn để kiểm soát đường huyết", "label": "dung", "gold_source": "tieu-duong"}
+{"id": 11, "claim": "Huyết áp về bình thường rồi thì tự bỏ thuốc được", "label": "sai", "gold_source": "tang-huyet-ap"}
+{"id": 12, "claim": "Ăn mặn ít lại giúp giảm huyết áp cao", "label": "dung", "gold_source": "tang-huyet-ap"}
+{"id": 13, "claim": "Thuốc gia truyền trị đau nhức xương khớp hiệu quả nhanh và không có tác dụng phụ", "label": "gay_hieu_lam", "gold_source": "thuoc-tron-corticoid"}
+{"id": 14, "claim": "Tiêm vắc-xin cho trẻ gây bệnh tự kỷ", "label": "sai", "gold_source": "vac-xin"}
+{"id": 15, "claim": "Người lớn tuổi nên tiêm vắc-xin cúm mỗi năm", "label": "dung", "gold_source": "vac-xin"}
+{"id": 16, "claim": "Sốt xuất huyết hết sốt là hết nguy hiểm", "label": "sai", "gold_source": "sot-xuat-huyet"}
+{"id": 17, "claim": "Sốt xuất huyết nên uống aspirin hoặc ibuprofen để hạ sốt", "label": "sai", "gold_source": "sot-xuat-huyet"}
+{"id": 18, "claim": "Giời leo mà bò kín một vòng quanh người là chết", "label": "sai", "gold_source": "zona"}
+{"id": 19, "claim": "Uống nước hoa đu đủ đực mỗi ngày chữa khỏi viêm gan", "label": "chua_du_bang_chung", "gold_source": "viem-gan"}
+{"id": 20, "claim": "Viêm gan B có vắc-xin phòng bệnh", "label": "dung", "gold_source": "viem-gan"}
