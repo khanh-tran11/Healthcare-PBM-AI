@@ -32,8 +32,8 @@ If the evidence is weak, the agent searches again once. If the evidence is still
 **Two AI partners, one human-led workflow.** Under a 60-minute build, we split the work between two AI coding assistants and kept every decision with our team of two. Claude Code planned the project and wrote the first working version: ingestion, hybrid retrieval with Reciprocal Rank Fusion, the folk-term normalizer, the cited JSON judge, the LangGraph agent with its retry loop, the evaluation harness and the Streamlit interface. IBM Bob then became our reviewer and improver, working on that code directly in our repository.
 
 How we used IBM Bob:
-- **Reviewing (/review, Ask mode):** Bob reviewed the judge and the agent graph and listed the most severe bugs and risks for a health tool, without editing files.
-- **Improving (Code mode):** Bob improved the offline judge so it detects "misleading" claims, the label our evaluation showed was weakest. We measured accuracy before and after on the same labelled claims: [B0]% to [B1]%.
+- **Reviewing (/review):** Bob reviewed the judge and the agent graph and found five real issues, including 0-based citation indices that an LLM could misread and a crash path when a graph node fails. We list the open ones in our README.
+- **Fixing (Code mode):** Bob fixed the most safety-critical one: when evidence was missing, the system never showed "see a doctor now", even for stroke or cancer claims.
 - **Shipping:** Bob committed its change on its own branch and pushed it; we reviewed the diff in a pull request before merging, so the Git history shows which assistant wrote what.
 
 **Guardrails for a health project.**
