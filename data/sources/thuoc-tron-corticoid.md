@@ -1,0 +1,2 @@
+https://www.nhs.uk/medicines/prednisolone/
+Tóm tắt tiếng Việt từ nguồn trên. Corticoid (như prednisolone) là thuốc kê đơn giảm viêm, giảm đau nhanh nhưng có nhiều tác dụng phụ khi dùng lâu: loãng xương, tăng đường huyết, tăng huyết áp, tăng cân, dễ nhiễm trùng, và suy tuyến thượng thận nếu ngưng đột ngột. Thuốc chỉ được dùng khi có chỉ định và theo dõi của bác sĩ. Các loại "thuốc gia truyền" trị đau nhức xương khớp không rõ nguồn gốc có thể bị trộn corticoid nên đỡ đau nhanh nhưng gây tác dụng phụ nặng khi dùng lâu dài.

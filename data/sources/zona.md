@@ -1,0 +1,2 @@
+https://www.nhs.uk/conditions/shingles/
+Tóm tắt tiếng Việt từ nguồn trên. Zona (giời leo) do virus thủy đậu tái hoạt động, gây phát ban mụn nước đau rát, thường chỉ ở một bên cơ thể theo một dải dây thần kinh. Quan niệm "giời leo bò kín một vòng quanh người là chết" không có cơ sở. Nên đi khám sớm, nhất là trong vòng 3 ngày đầu, để được dùng thuốc kháng virus; người trên 50 tuổi có thể tiêm vắc-xin phòng zona.

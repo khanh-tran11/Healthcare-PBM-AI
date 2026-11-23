@@ -1,0 +1,2 @@
+https://www.who.int/news-room/fact-sheets/detail/diabetes
+Tóm tắt tiếng Việt từ nguồn trên. Tiểu đường (đái tháo đường) là bệnh mạn tính, hiện chưa chữa khỏi hẳn nhưng kiểm soát được. Ăn uống lành mạnh, hoạt động thể lực đều đặn, giữ cân nặng hợp lý và không hút thuốc giúp kiểm soát đường huyết. Người bệnh cần dùng thuốc theo chỉ định và kiểm tra định kỳ. Chỉ thay đổi một món ăn như bỏ cơm, ăn khoai lang không làm khỏi bệnh; khoai lang vẫn chứa tinh bột và làm tăng đường huyết.

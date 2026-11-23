@@ -1,0 +1,2 @@
+https://www.who.int/news-room/fact-sheets/detail/hepatitis-b
+Tóm tắt tiếng Việt từ nguồn trên. Viêm gan B do virus lây qua máu, quan hệ tình dục và từ mẹ sang con. Có vắc-xin an toàn và hiệu quả phòng viêm gan B, nên tiêm cho trẻ sơ sinh ngay sau sinh. Viêm gan B mạn tính được điều trị bằng thuốc kháng virus theo chỉ định của bác sĩ và cần theo dõi định kỳ để phát hiện xơ gan, ung thư gan.
