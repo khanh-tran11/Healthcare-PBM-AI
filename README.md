@@ -1,74 +1,74 @@
-# Healthcare-PBM-AI: kiểm chứng tin sức khỏe tiếng Việt cho người cao tuổi
+# Healthcare-PBM-AI: Vietnamese health-claim fact-checker for older adults
 
-Agent RAG trên **IBM watsonx.ai**, được xây dựng cùng **IBM Bob**. Người dùng dán một tin nhận được trên Zalo/Facebook (viết bằng cách nói dân gian), hệ thống trả về thẻ kết quả **Đúng / Sai / Gây hiểu lầm / Chưa đủ bằng chứng**, kèm giải thích 2 câu, nguồn Bộ Y tế/WHO và một tin nhắn lịch sự để con cháu gửi lại cho bố mẹ.
+An agentic RAG system on **IBM watsonx.ai**, built with **IBM Bob**. A user pastes a message they received on Zalo or Facebook, written in everyday folk language. The system returns a verdict card (**True / False / Misleading / Not enough evidence**) with a two-sentence explanation in plain Vietnamese, a Ministry of Health / WHO source, and a polite message younger relatives can forward to their parents.
 
-## Vấn đề
-- Người trung niên và cao tuổi là nạn nhân chính của tin giả sức khỏe: một cụ gần 70 tuổi bỏ viện theo video "nhịn ăn, tắm nắng 7 ngày chữa ung thư"; một bà 69 tuổi ngồi xe lăn sau nhiều năm dùng thuốc gia truyền trộn corticoid (VietNamNet, 07–08/2025).
-- Người trên 65 tuổi chia sẻ link tin giả nhiều hơn: 11% so với 3% ở nhóm 18–29 (Guess, Nagler & Tucker, *Science Advances*, 2019).
-- Con cháu thấy nhưng hiếm khi lên tiếng: chỉ 16,2% người trẻ Việt Nam chủ động ngăn tin giả (*Scientific Reports*, 2025).
+## Problem
+- Middle-aged and older adults are the main victims of health misinformation in Vietnam. A man of nearly 70 refused hospital care to follow a "7-day fasting and sunbathing cure" for suspected cancer; a 69-year-old woman ended up in a wheelchair after years of a "family remedy" laced with corticosteroids (VietNamNet, July–August 2025).
+- Older users share fake news more: 11% of users over 65 vs 3% of users aged 18–29 (Guess, Nagler & Tucker, *Science Advances*, 2019).
+- Younger relatives rarely push back: only 16.2% of young Vietnamese act to stop fake news (*Scientific Reports*, 2025).
 
 ## Enterprise Design Thinking
-**Problem statement:** Người Việt trung niên và cao tuổi khó phân biệt tin sức khỏe thật giả trên Facebook và Zalo, vì tin giả dùng đúng cách nói dân gian quen thuộc, còn nguồn chính thống dài, khó tìm và dùng thuật ngữ y khoa.
+**Problem statement:** Older Vietnamese adults struggle to tell true from false health claims on Facebook and Zalo, because misinformation uses the folk phrasing they know, while official sources are long, hard to find and written in clinical terms.
 
-**Hill:** *Who* bà Hoa (66) và cháu Minh (24) · *What* dán một tin và trong vài giây biết đúng/sai kèm nguồn, bằng chính cách nói của mình · *Wow* độ chính xác, độ trễ và chi phí đo trên bộ eval (bảng dưới), mọi kết luận đều có nguồn.
+**Hill:** *Who* Mrs. Hoa (66) and her grandson Minh (24) · *What* paste a message and, within seconds, know whether it is true, with a source, in their own words · *Wow* accuracy, latency and cost measured on a labelled eval set (below); every verdict is cited.
 
-**As-is → To-be:** bà Hoa nhận video và chuyển tiếp; Minh ngại đính chính → Minh dán tin vào tool, thấy "Sai" + "Đã hiểu: tai biến → đột quỵ", bấm *Copy gửi gia đình* và gửi vào nhóm Zalo.
+**As-is → To-be:** Mrs. Hoa receives a video and forwards it; Minh avoids correcting her → Minh pastes the message into the tool, sees "False" plus "Understood: tai biến → đột quỵ (stroke)", taps *Copy to family* and sends it to the family Zalo group.
 
-## Kiến trúc (goal-based agent, 5 bước RAG)
+## Architecture (goal-based agent, 5-step RAG)
 ```mermaid
 flowchart LR
-  A[Tin đồn dân gian] --> B[Perceive: chuẩn hóa từ dân gian<br/>glossary + watsonx LLM]
+  A[Folk-language claim] --> B[Perceive: folk-term normalization<br/>glossary + watsonx LLM]
   B --> C[Process: hybrid retrieval<br/>BM25 + watsonx embeddings, RRF]
-  C --> D[Decide: watsonx LLM judge<br/>JSON có trích dẫn]
-  D --> E{Re-check: đủ bằng chứng?}
-  E -- chưa, lần đầu --> F[Mở rộng truy vấn] --> C
-  E -- đủ / đã thử lại --> G[Act: thẻ kết quả + Copy gửi gia đình]
+  C --> D[Decide: watsonx LLM judge<br/>cited JSON verdict]
+  D --> E{Re-check: enough evidence?}
+  E -- no, first try --> F[Expand query] --> C
+  E -- yes / already retried --> G[Act: verdict card + Copy to family]
 ```
-RAG: (1) prompt creation = claim đã chuẩn hóa · (2) information search = BM25 + vector · (3) retrieval = top-5 đoạn · (4) prompt augmentation = ghép đoạn nguồn vào prompt judge · (5) response generation = verdict JSON có trích dẫn.
+RAG steps: (1) prompt creation = normalized claim · (2) information search = BM25 + vectors · (3) retrieval = top-5 chunks · (4) prompt augmentation = source chunks inserted into the judge prompt · (5) response generation = cited JSON verdict.
 
-| Thành phần IBM | Vai trò |
+| IBM component | Role |
 |---|---|
-| IBM Bob | Lập kế hoạch, viết và review code (Plan / Agent / Ask mode, checkpoints) |
-| watsonx.ai LLM (`WATSONX_MODEL_ID`) | Chuẩn hóa claim, ra verdict có trích dẫn |
-| watsonx.ai embeddings (`WATSONX_EMBED_MODEL_ID`) | Tìm kiếm ngữ nghĩa tiếng Việt |
-| Roadmap: Granite Guardian, watsonx Orchestrate, Code Engine, watsonx.data | Kiểm tra groundedness, điều phối nhiều agent, deploy, kho nguồn quy mô lớn |
+| IBM Bob | Code review, judge improvements and commits (see below) |
+| watsonx.ai LLM (`WATSONX_MODEL_ID`) | Claim normalization and cited verdicts |
+| watsonx.ai embeddings (`WATSONX_EMBED_MODEL_ID`) | Semantic search in Vietnamese |
+| Roadmap: Granite Guardian, watsonx Orchestrate, Code Engine, watsonx.data | Groundedness checks, multi-agent coordination, deployment, large-scale source library |
 
-## Kết quả (ablation)
-Mỗi cải tiến bật bằng flag và đo lại trên cùng bộ claim gán nhãn tay (`data/eval_claims.jsonl`). Bảng đầy đủ: [`eval/ablation.md`](eval/ablation.md).
+## Results (ablation)
+Every improvement is behind a feature flag and measured on the same hand-labelled claims (`data/eval_claims.jsonl`, 20 claims across 10 topics). `eval/run_eval.py` appends each run to `eval/ablation.md`.
 
-| Variant | Accuracy | Recall@5 | p50 latency | Cost/request |
-|---|---|---|---|---|
-| baseline (dense) | _ | _ | _ | _ |
-| + hybrid | _ | _ | _ | _ |
-| + folk normalization | _ | _ | _ | _ |
-| + agent retry (full) | _ | _ | _ | _ |
+| Variant (offline mode) | Accuracy | Recall@5 |
+|---|---|---|
+| baseline (dense only) | 85% | 100% |
+| full (hybrid + folk + agent retry) | 85% | 100% |
 
-## Chạy thử
+These numbers come from **offline mode** (see Demo status). The source texts and offline rules were adjusted while looking at eval errors, so treat them as a development-set result, not a held-out score.
+
+## Run it
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env            # điền WATSONX_APIKEY, WATSONX_PROJECT_ID (để trống = chế độ offline)
-python scripts/smoke_test.py    # kiểm tra kết nối watsonx
-python -m src.ingest            # đọc data/sources/*.md, tạo index/
+cp .env.example .env            # set WATSONX_APIKEY, WATSONX_PROJECT_ID (leave empty = offline mode)
+python scripts/smoke_test.py    # check the watsonx connection
+python -m src.ingest            # read data/sources/*.md and build index/
 python -m eval.run_eval --variant baseline
 python -m eval.run_eval --variant hybrid --flags hybrid
 python -m eval.run_eval --variant hybrid+folk --flags hybrid,folk
 python -m eval.run_eval --variant full --flags hybrid,folk,agent
 streamlit run app.py
 ```
-Không có khóa watsonx, hệ thống tự chạy **chế độ offline** (embedding băm cục bộ + judge theo luật), giao diện ghi rõ điều này.
+Without a watsonx key the system runs in **offline mode** (local hashed embeddings + a rule-based judge), and the UI says so clearly.
 
-> **Trạng thái demo (22/11/2026):** đường watsonx.ai (LLM + embeddings) đã được cài đặt đầy đủ trong `src/watsonx_client.py`, nhưng chưa chạy được vì IBM Cloud báo lỗi *"An error occurred while retrieving data from global catalog"* khi tạo dịch vụ watsonx.ai Runtime (thử 2 lần). Vì vậy video demo và bảng số liệu ở trên được chạy ở **chế độ offline**. Khi có khóa, chỉ cần điền `.env`; không cần sửa code.
+> **Demo status (2026-11-22):** the watsonx.ai path (LLM + embeddings) is fully implemented in `src/watsonx_client.py`, but it has not been run: IBM Cloud returned *"An error occurred while retrieving data from global catalog"* when we tried to create the watsonx.ai Runtime service (twice). The demo video and the numbers above therefore use **offline mode**. With a key, only `.env` needs to change; no code changes.
 
-## Guardrails và giới hạn
-- Không có trích dẫn thì không kết luận: trả "Chưa đủ bằng chứng".
-- Agent thử tìm lại một lần, sau đó từ chối thay vì đoán.
-- Cờ `see_doctor` hiện "Nên đi khám ngay" với đột quỵ, ung thư, sốt xuất huyết...; luôn có cảnh báo "không thay thế bác sĩ".
-- `.env` không bao giờ được commit; `.bobignore` giữ khóa và dữ liệu ngoài ngữ cảnh của Bob.
-- Giới hạn: bộ eval nhỏ, chưa có bác sĩ duyệt; số liệu tuổi 11% vs 3% là của Mỹ; chỉ phủ các chủ đề có trong `data/sources/`.
+## Guardrails and limitations
+- No citation, no conclusion: the system answers "Not enough evidence".
+- The agent retries retrieval once, then declines instead of guessing.
+- A `see_doctor` flag shows "See a doctor now" for stroke, cancer, dengue and similar; a "does not replace a doctor" warning is always shown.
+- `.env` is never committed; `.bobignore` keeps keys and data out of Bob's context.
+- Limitations: small eval set with no clinician review; the 11% vs 3% age figures are from the US; only topics in `data/sources/` are covered. Source files are short Vietnamese summaries of the linked WHO/NHS pages.
 
-## Built with IBM Bob
-Quy trình: Plan mode dựng khung → Agent mode viết từng thành phần → Ask mode giải thích lỗi trước khi sửa → checkpoints để quay lại → review trước khi nộp. Luật dự án ngắn trong [`agents.md`](agents.md); [`.bobignore`](.bobignore) chặn `.env`, dữ liệu nguồn và index. Báo cáo phiên Bob: [`docs/bob-sessions/`](docs/bob-sessions/). Bài viết nộp: [`docs/SUBMISSION-STATEMENTS.md`](docs/SUBMISSION-STATEMENTS.md).
+## How we built it
+Claude Code (Anthropic) planned the project and wrote the first working version. IBM Bob then reviewed the judge and agent graph, improved the offline judge, and committed its changes on its own branch, reviewed via pull request. Project rules for Bob are in [`agents.md`](agents.md); [`.bobignore`](.bobignore) blocks `.env`, source data and the index. Bob session reports: [`docs/bob-sessions/`](docs/bob-sessions/). Submission statements: [`docs/SUBMISSION-STATEMENTS.md`](docs/SUBMISSION-STATEMENTS.md).
 
 ## Roadmap
-Zalo bot cho người cao tuổi; watsonx Orchestrate điều phối agent chuẩn hóa / tìm nguồn / kiểm tra an toàn; Granite Guardian; 5 Sponsor User trên 60 tuổi dùng thử 2 tuần; thêm chủ đề chỉ cần thêm file nguồn và glossary.
+A Zalo bot for older users; watsonx Orchestrate to coordinate normalization / retrieval / safety agents; Granite Guardian; a two-week pilot with five Sponsor Users over 60; new topics only need new source files and glossary entries.
