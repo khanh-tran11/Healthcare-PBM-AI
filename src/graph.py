@@ -66,6 +66,16 @@ def _build():
 _app = None
 
 
+def _run_plain(state: State) -> State:
+    """Plain-Python fallback (no LangGraph)."""
+    for fn in (n_normalize, n_retrieve, n_judge):
+        state.update(fn(state))
+    if needs_retry(state):
+        for fn in (n_expand, n_retrieve, n_judge):
+            state.update(fn(state))
+    return state
+
+
 def run(claim: str, flags: Flags) -> Verdict:
     global _app
     state: State = {"claim": claim, "flags": flags, "tokens": 0}
@@ -73,11 +83,13 @@ def run(claim: str, flags: Flags) -> Verdict:
         if _app is None:
             _app = _build()
         state = _app.invoke(state)
+        if state.get("verdict") is None:
+            state = _run_plain(state)
     except ImportError:
-        for fn in (n_normalize, n_retrieve, n_judge):
-            state.update(fn(state))
-        if needs_retry(state):
-            for fn in (n_expand, n_retrieve, n_judge):
-                state.update(fn(state))
-    v = state["verdict"]
+        state = _run_plain(state)
+    v = state.get("verdict")
+    if v is None:
+        from src import config  # noqa: PLC0415
+        from src.judge import _not_enough  # noqa: PLC0415
+        v = _not_enough([], "", "offline" if config.OFFLINE else "watsonx", claim=claim)
     return v.model_copy(update={"tokens": state.get("tokens", 0), "retried_query": state.get("retried_query")})

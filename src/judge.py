@@ -79,7 +79,11 @@ def _llm_judge(claim: str, chunks: list[Chunk], understood: str) -> Verdict:
             continue
     else:
         return _not_enough(chunks, understood, "watsonx", total, claim)
-    cited = [chunks[i] for i in raw.cited if 0 <= i < len(chunks)]
+    indices = raw.cited
+    # Shift to 0-based if every index looks 1-based (all in 1..len)
+    if indices and all(1 <= i <= len(chunks) for i in indices):
+        indices = [i - 1 for i in indices]
+    cited = [chunks[i] for i in indices if 0 <= i < len(chunks)]
     if not cited and raw.label != "chua_du_bang_chung":
         return _not_enough(chunks, understood, "watsonx", total, claim)  # guardrail: no citation, no verdict
     return Verdict(
