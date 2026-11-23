@@ -56,7 +56,9 @@ python -m eval.run_eval --variant hybrid+folk --flags hybrid,folk
 python -m eval.run_eval --variant full --flags hybrid,folk,agent
 streamlit run app.py
 ```
-Không có khóa watsonx, hệ thống tự chạy **chế độ offline** (embedding băm cục bộ + judge theo luật), giao diện ghi rõ điều này. Số liệu báo cáo phải lấy từ chế độ watsonx.
+Không có khóa watsonx, hệ thống tự chạy **chế độ offline** (embedding băm cục bộ + judge theo luật), giao diện ghi rõ điều này.
+
+> **Trạng thái demo (22/11/2026):** đường watsonx.ai (LLM + embeddings) đã được cài đặt đầy đủ trong `src/watsonx_client.py`, nhưng chưa chạy được vì IBM Cloud báo lỗi *"An error occurred while retrieving data from global catalog"* khi tạo dịch vụ watsonx.ai Runtime (thử 2 lần). Vì vậy video demo và bảng số liệu ở trên được chạy ở **chế độ offline**. Khi có khóa, chỉ cần điền `.env`; không cần sửa code.
 
 ## Guardrails và giới hạn
 - Không có trích dẫn thì không kết luận: trả "Chưa đủ bằng chứng".

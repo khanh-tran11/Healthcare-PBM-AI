@@ -6,7 +6,7 @@ Thay các ô [C] (số claim, ví dụ 12), [X], [R], [Y], [Z], [N], [P] bằng 
 
 ## 1. Problem and Solution Statement
 
-**Problem.** In Vietnam, middle-aged and older adults are the people most harmed by health misinformation. Videos and Zalo posts promise "family remedies" and miracle cures, written in the folk language older people use every day ("trúng gió", "nóng trong", "thuốc gia truyền"). The harm is real. VietNamNet (July and August 2025) reported a man of nearly 70 with suspected stomach cancer who refused hospital care to follow a "7-day fasting and sunbathing cure", a 69-year-old woman left wheelchair-bound after years of an unlicensed joint-pain remedy laced with corticosteroids. Older adults are also the most likely to pass such content on: in a Science Advances study (Guess et al., 2019), 11% of users over 65 shared fake news links, compared with 3% of users aged 18 to 29. Younger relatives rarely push back: in a 2025 Scientific Reports survey of 1,850 young Vietnamese, only 16.2% act to stop fake news, often to avoid conflict.
+**Problem.** In Vietnam, middle-aged and older adults are the people most harmed by health misinformation. Videos and Zalo posts promise "family remedies" and miracle cures, written in the folk language older people use every day ("trúng gió", "nóng trong", "thuốc gia truyền"). The harm is real. VietNamNet (July and August 2025) reported a man of nearly 70 with suspected stomach cancer who refused hospital care to follow a "7-day fasting and sunbathing cure", a 69-year-old woman left wheelchair-bound after years of an unlicensed joint-pain remedy laced with corticosteroids. Older adults are also the most likely to pass such content on: in a Science Advances study (Guess et al., 2019), 11% of users over 65 shared fake news links, compared with 3% of users aged 18 to 29. Younger relatives rarely push back: in a 2025 Scientific Reports survey of 1,850 young Vietnamese, only 16.2% act to stop fake news.
 
 **Point of view.** Older Vietnamese adults need a way to check a health claim in their own words, because trusted sources (Ministry of Health, WHO) are long, hard to find and written in clinical terms that do not match how they talk.
 
@@ -17,19 +17,20 @@ Thay các ô [C] (số claim, ví dụ 12), [X], [R], [Y], [Z], [N], [P] bằng 
 2. Retrieves evidence from trusted Vietnamese and WHO sources.
 3. Gives a colour-coded verdict (True, False, Misleading, or Not enough evidence) with a two-sentence explanation in plain Vietnamese and the source link.
 
-If the evidence is weak, the agent searches again once. If the evidence is still weak, it refuses to guess and says "not enough evidence". Danger signs trigger "see a doctor now". A "Copy to family" button drafts a respectful message, with the source, that Minh can paste straight into the family Zalo group. This lowers the social cost of correcting a parent.
+If the evidence is weak, the agent searches again once. If the evidence is still weak, it refuses to guess and says "not enough evidence". Danger signs trigger "see a doctor now". A "Copy to family" button drafts a respectful message, with the source, that Minh can paste straight into the family Zalo group.
 
-**Impact and evidence.** On a hand-labelled set of [C] common Vietnamese health myths, the full agent reached [X]% verdict accuracy and [R]% recall@5. Our ablation shows each component's contribution: from [X0]% with plain dense retrieval to [X]% with hybrid search, folk-term normalization and the retry loop. Median response time is [Y] seconds at about [Z] per check.
+**Impact and evidence.** Because IBM Cloud could not provision watsonx.ai Runtime (catalog error), the numbers below come from offline mode; the watsonx path is implemented. On a hand-labelled set of [C] common Vietnamese health myths, the full agent reached [X]% verdict accuracy and [R]% recall@5. Our ablation shows each component's contribution: from [X0]% with plain dense retrieval to [X]% with hybrid search, folk-term normalization and the retry loop. Median response time is [Y] seconds at about [Z] per check.
 
 **Scale.** Adding a new health topic means adding source documents and glossary entries, with no retraining. Next steps:
 - A Zalo bot, so older users never leave the app they already use.
 - Watsonx Orchestrate to coordinate specialized agents.
-- Watsonx.data for a national-scale source library.
 - Pilots with five older Sponsor Users and community health workers.
 
 ---
 
 ## 2. Technology Statement (IBM Bob)
+
+> ⚠️ **Khanh/Link sửa trước khi nộp:** từ 7:43 PM code do Claude Code viết, không phải Bob. Câu "IBM Bob wrote the code" và các gạch đầu dòng về Bob bên dưới chỉ được giữ nếu đúng. Viết lại theo những gì nhóm thật sự đã dùng Bob (ví dụ: /review repo, hỏi Bob giải thích lỗi, viết README) và xuất báo cáo session Bob đó.
 
 **IBM Bob as our development partner.** IBM Bob wrote the code for this project. Our team of two directed, reviewed and approved every step. We worked in small, file-scoped prompts, one per component, and committed after each, so the Git history mirrors Bob's work.
 
@@ -58,6 +59,7 @@ How we used Bob across the software lifecycle:
 **IBM watsonx.ai.**
 - **LLM:** [model ID] normalizes claims and produces cited verdicts as validated JSON.
 - **Embeddings:** [embedding model ID] are multilingual embeddings that power semantic retrieval in Vietnamese.
+- **Status:** implemented in `src/watsonx_client.py`; an IBM Cloud catalog error blocked provisioning, so the demo runs in labelled offline mode.
 
 **Architecture.** The agent follows a goal-based loop:
 1. Perceive: normalize the folk phrase.
