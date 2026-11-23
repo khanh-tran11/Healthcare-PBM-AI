@@ -1,0 +1,7 @@
+.env
+.venv/
+index/
+data/sources/
+__pycache__/
+*.pdf
+eval/results/
