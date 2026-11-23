@@ -91,7 +91,9 @@ def _llm_judge(claim: str, chunks: list[Chunk], understood: str) -> Verdict:
 
 
 _REFUTE = ("không có tác dụng", "không nên", "không được", "tuyệt đối không", "không phải",
-           "không thể", "là sai", "sai lầm", "không chữa", "không có cơ sở", "không giúp")
+           "không thể", "là sai", "sai lầm", "không chữa", "không có cơ sở", "không giúp",
+           "không có mối liên hệ", "không dùng", "không có bằng chứng", "không làm",
+           "không gây", "không tự ý")
 _UNPROVEN = ("chưa có bằng chứng", "chưa được chứng minh", "chưa đủ bằng chứng")
 _DANGER = ("đột quỵ", "tai biến", "ung thư", "sốt xuất huyết", "corticoid")
 

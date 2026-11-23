@@ -1,0 +1,2 @@
+https://www.who.int/news-room/fact-sheets/detail/antibiotic-resistance
+Tóm tắt tiếng Việt từ nguồn trên. Kháng sinh (trụ sinh) chỉ có tác dụng với vi khuẩn, không có tác dụng với virus gây cảm lạnh và cúm. Dùng kháng sinh không cần thiết hoặc sai cách làm vi khuẩn kháng thuốc, khiến bệnh khó chữa hơn. Chỉ dùng kháng sinh khi có chỉ định của nhân viên y tế. Phải uống đủ liều và đủ thời gian theo đơn, không tự ý ngưng thuốc khi thấy đỡ, không dùng lại kháng sinh còn thừa và không chia thuốc cho người khác.

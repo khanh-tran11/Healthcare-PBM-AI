@@ -1,0 +1,2 @@
+https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue
+Tóm tắt tiếng Việt từ nguồn trên. Sốt xuất huyết do virus dengue lây qua muỗi. Hết sốt không phải là hết nguy hiểm, vì giai đoạn nguy hiểm thường đến khi hết sốt: có thể xuất hiện đau bụng dữ dội, nôn liên tục, chảy máu, mệt lả; khi đó phải đến bệnh viện ngay. Hạ sốt bằng paracetamol. Người bị sốt xuất huyết không dùng aspirin hoặc ibuprofen để hạ sốt vì làm tăng nguy cơ chảy máu. Uống đủ nước và theo dõi sát dấu hiệu cảnh báo.

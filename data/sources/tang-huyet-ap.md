@@ -1,0 +1,2 @@
+https://www.who.int/news-room/fact-sheets/detail/hypertension
+Tóm tắt tiếng Việt từ nguồn trên. Tăng huyết áp (cao huyết áp) thường không có triệu chứng nên cần đo huyết áp định kỳ. Giảm ăn mặn (dưới 5 gam muối mỗi ngày), ăn nhiều rau quả, vận động đều, bỏ thuốc lá và hạn chế rượu bia giúp giảm huyết áp. Người được kê thuốc huyết áp cần uống đều đặn theo chỉ định; huyết áp về bình thường thường là nhờ thuốc, nên không tự ý bỏ thuốc mà phải hỏi bác sĩ.

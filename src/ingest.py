@@ -12,6 +12,8 @@ CHUNK, OVERLAP = 500, 100
 def load_sources() -> list[dict]:
     docs = []
     for path in sorted(config.SOURCES_DIR.glob("*.md")):
+        if path.name.lower() == "readme.md":
+            continue
         lines = path.read_text(encoding="utf-8").strip().splitlines()
         if not lines:
             continue
