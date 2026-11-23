@@ -34,14 +34,16 @@ RAG steps: (1) prompt creation = normalized claim · (2) information search = BM
 | Roadmap: Granite Guardian, watsonx Orchestrate, Code Engine, watsonx.data | Groundedness checks, multi-agent coordination, deployment, large-scale source library |
 
 ## Results (ablation)
-Every improvement is behind a feature flag and measured on the same hand-labelled claims (`data/eval_claims.jsonl`, 20 claims across 10 topics). `eval/run_eval.py` appends each run to `eval/ablation.md`.
+Every improvement is behind a feature flag and measured on the same hand-labelled claims (`data/eval_claims.jsonl`, 20 claims across 10 topics). `eval/run_eval.py` appends each run to [`eval/ablation.md`](eval/ablation.md).
 
-| Variant (offline mode) | Accuracy | Recall@5 |
-|---|---|---|
-| baseline (dense only) | 85% | 100% |
-| full (hybrid + folk + agent retry) | 85% | 100% |
+| Variant | Flags | Accuracy | Recall@5 |
+|---|---|---|---|
+| baseline | — | 85% | 100% |
+| hybrid | hybrid | 85% | 100% |
+| hybrid+folk | hybrid, folk | 85% | 100% |
+| hybrid+folk+agent | hybrid, folk, agent | 85% | 100% |
 
-These numbers come from **offline mode** (see Demo status). The source texts and offline rules were adjusted while looking at eval errors, so treat them as a development-set result, not a held-out score.
+Accuracy and Recall@5 are identical across variants because all runs use **offline mode** (local hashing embeddings + rule-based judge). The 3 misclassifications are `gay_hieu_lam` claims predicted as `dung` or `sai` — a known gap in the offline rule judge. The retrieval and folk-normalisation flags are expected to show differentiated lift once the watsonx LLM path is active. Full per-claim breakdowns are in [`eval/ablation.md`](eval/ablation.md).
 
 ## Run it
 ```bash
@@ -61,10 +63,10 @@ Without a watsonx key the system runs in **offline mode** (local hashed embeddin
 > **Demo status (2026-11-22):** the watsonx.ai path (LLM + embeddings) is fully implemented in `src/watsonx_client.py`, but it has not been run: IBM Cloud returned *"An error occurred while retrieving data from global catalog"* when we tried to create the watsonx.ai Runtime service (twice). The demo video and the numbers above therefore use **offline mode**. With a key, only `.env` needs to change; no code changes.
 
 ## Known issues (found by IBM Bob /review)
-Bob reviewed `src/judge.py` and `src/graph.py` and reported five issues. Bob fixed #2 (`see_doctor` is now set for danger topics even when there is not enough evidence). The rest are open:
-1. `judge.py`: chunk indices in the judge prompt are 0-based but the prompt does not say so; if the LLM answers with 1-based indices, valid citations are dropped and the guardrail returns "Not enough evidence".
+Bob reviewed `src/judge.py` and `src/graph.py` and reported five issues. Bob fixed #1, #2, and #3. The rest are open:
+1. ~~`judge.py`: chunk indices in the judge prompt are 0-based but the prompt does not say so; if the LLM answers with 1-based indices, valid citations are dropped and the guardrail returns "Not enough evidence".~~ (fixed by Bob — indices are now auto-shifted).
 2. ~~`judge.py`: `_not_enough` always set `see_doctor=False`~~ (fixed by Bob).
-3. `graph.py`: if a node fails before the judge writes `verdict`, `state["verdict"]` is missing and the final step crashes with no recovery path.
+3. ~~`graph.py`: if a node fails before the judge writes `verdict`, `state["verdict"]` is missing and the final step crashes with no recovery path.~~ (fixed by Bob — `_run_plain` fallback + safe `state.get`).
 4. `graph.py`: the compiled LangGraph app is a module-level singleton; a runtime `ImportError` inside `invoke` is never caught by the plain-Python fallback.
 5. `judge.py`: the JSON retry reuses the identical prompt, so at temperature 0 it is a wasted call; it should add a "return valid JSON only" correction.
 
