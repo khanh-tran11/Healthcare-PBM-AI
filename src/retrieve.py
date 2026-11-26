@@ -14,6 +14,15 @@ from src.watsonx_client import embed
 def _index():
     chunks = json.loads((config.INDEX_DIR / "chunks.json").read_text("utf-8"))
     vectors = np.load(config.INDEX_DIR / "vectors.npy")
+    meta_path = config.INDEX_DIR / "meta.json"
+    if meta_path.exists():
+        built_offline = json.loads(meta_path.read_text("utf-8")).get("offline")
+        if built_offline is not None and built_offline != config.OFFLINE:
+            built, now = ("offline", "watsonx") if built_offline else ("watsonx", "offline")
+            raise RuntimeError(
+                f"index/ was built in {built} mode but the app is now in {now} mode. "
+                "Run `python -m src.ingest` again."
+            )
     return chunks, vectors
 
 
